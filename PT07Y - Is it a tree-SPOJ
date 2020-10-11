@@ -1,0 +1,43 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define pb push_back
+ 
+const int N=10000+5;
+#define FAST ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
+const int dx[] = { -1 , +0 , +1 , +0 , +1 , +1 , -1 , -1 };
+const int dy[] = { +0 , -1 , +0 , +1 , +1 , -1 , +1 , -1 };
+int n,t,m,cont;
+bool visit[N],c;
+vector<int>adj[N]; 
+void dfs(int node){
+    visit[node]=1;
+    for(int v:adj[node]){
+        if(visit[v]){
+            c=0;
+            break;
+        }    
+        else{    
+            cont++;
+            dfs(v);
+        }     
+    }
+}
+int main(){
+	FAST;
+        cin>>n>>m;
+        int x=0,init;
+        for(int i=0;i<m;i++){
+            int a,b;
+            cin>>a>>b;
+            if(!x) init=a;
+            
+            adj[a].pb(b);   
+            x=1;
+        }
+        cont=1;//number of nodes
+        c=1;//not bucle
+        dfs(init);
+    if(cont==n and m==n-1 and c) cout<<"YES"<<endl;
+    else cout<<"NO"<<endl;
+    return 0;
+} 
