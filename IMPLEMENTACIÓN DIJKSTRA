@@ -1,0 +1,39 @@
+#include<bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+using namespace std;
+const int N=1e4;
+vector<pair<int,int>>adj[N];
+int main(){
+    int n,m;
+    //SEAN N NODOS CON M ARISTAS ,SEAN A Y B NODOS CORRESPONDIENTES A UNA ARISTA Y C EL PESO ENTRE A-B.
+    cin>>n>>m;
+    for(int i=0;i<m;i++){
+        int a,b,c;
+        cin>>a>>b>>c;
+        adj[a].pb(mp(b,c));
+        adj[b].pb(mp(a,c));
+    }
+    //PRIORITY_QUEUE NOS AYUDA A MANTENER ORDENADA LA COLA POR EL VALOR DEL ELEMENTO (COMO SI EN CADA PUSH LO ESTARIAS ORDENANDO UNA Y OTRA VEZ)
+    priority_queue<pair<int,int>>pq;//dist vertex 
+    int dist[N];
+    for(int i=0;i<n;i++)
+        dist[i]=INT_MAX;
+    pq.push(mp(0,0));    
+    dist[0]=0;
+    while(not pq.empty()){
+        int v=pq.top().second;
+        pq.pop();
+        for(int x=0;x<adj[v].size();x++){
+            int weit=adj[v][x].second;
+            if(dist[adj[v][x].first]>weit+dist[v]){
+                dist[adj[v][x].first]=weit+dist[v];
+                pq.push(mp(weit+dist[v],adj[v][x].first));
+            }
+        }
+    }
+    	printf("Vertex   Distance from Source\n"); 
+    for (int i = 0; i < n; ++i) 
+        printf("%d \t\t %d\n", i, dist[i]);
+       return 0; 
+}
