@@ -1,0 +1,47 @@
+#include <bits/stdc++.h>
+#define FAST ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
+using namespace std;
+const int N=100005;
+int n,m;
+vector<int>adj[N],ans;
+stack<int>prin;
+bool  v[N], go[N];
+void dfs(int now){
+    v[now]=1;
+    go[now]=1;
+    
+    for(auto u:adj[now]){
+        if(!v[u])dfs(u);
+        if(go[u]){
+            cout<<"-1\n";
+            exit(0);
+        }
+         
+    }    
+    go[now]=0;
+    ans.push_back(now);
+    return ;
+}
+int main() {	
+	FAST; 
+	cin>>n>>m;
+	for(int i=0;i<m;i++){
+		int r;cin>>r;
+		prin.push(r);
+	}
+	
+	for(int i=1;i<=n;i++){
+	    int x;cin>>x;
+	    for(int j=0;j<x;j++){
+	        int r;cin>>r;
+	        adj[i].push_back(r);
+	    }
+	}
+    while(!prin.empty()){
+    	int i=prin.top();
+    	prin.pop();
+    	if(!v[i])dfs(i);
+    }
+    cout<<ans.size()<<'\n';
+    for(auto v:ans)cout<<v<<" ";
+}
