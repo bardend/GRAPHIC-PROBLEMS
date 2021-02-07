@@ -1,0 +1,88 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define all(c) (c).begin(), (c).end()
+#define pb push_back 
+typedef long long ll;
+typedef pair<int, int> ii;
+typedef vector<int> vi;
+typedef vector<ii> vii;
+
+const int inf = 1e9;
+const int maxn = 105;
+
+int n, m;
+vector<vi> g(maxn, vi(maxn, inf));
+vi d(maxn, inf);
+vi p(maxn);
+vector<vi> adj;
+vector<vi> tree;
+vector<bool> used;
+
+void dijkstra() {
+    used.resize(n+1, false);
+
+    d[0] = 0;
+    for(int i = 0; i <= n; i++) {
+        int pos, Tpos = inf;
+        for(int j = 0; j <= n; j++) {
+            if(!used[j] && d[j] < Tpos) {
+                pos = j;
+                Tpos = d[j];
+            }
+        }
+        if(Tpos == inf) break;
+        used[pos] = true;
+
+        for(int j = 0; j <= n; j++) {
+            if(used[j]) continue;
+            if(d[pos] + g[pos][j] < d[j]) {
+                d[j] = d[pos] + g[pos][j];
+                p[j] = pos;
+            }
+        }
+    }
+}
+
+vi c(maxn);
+void cars_needed(int v = 0) {
+    used[v] = true;
+
+    c[v] = 0;
+    for(int to : tree[v]) {
+        if(used[to]) continue;
+        cars_needed(to);
+        c[v] += c[to];
+    }
+
+    if(c[v] == 0) c[v] = 1;
+}
+        
+
+int main() {
+    cin >> n >> m;
+    for(int i = 0; i < m; i++) {
+        int u, v, w; cin >> u >> v >> w;
+        g[u][v] = min(g[u][v], w);
+        g[v][u] = g[u][v];
+    }
+
+    dijkstra();
+
+    tree.resize(n+1);
+
+    for(int i = 0; i <= n; i++) {
+        tree[i].pb(p[i]);
+        tree[p[i]].pb(i);
+    }
+
+    used.clear();
+    used.resize(n+1, false);
+
+    cars_needed();
+
+    for(int i = 0; i <= n; i++) {
+        cout << c[i] << " ";
+    }
+		
+	return 0;
+}
