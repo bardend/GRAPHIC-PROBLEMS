@@ -1,0 +1,53 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define f first
+#define s second
+#define FAST ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
+ 
+const int N=2e5+5;
+typedef pair<ll,pair<int,int>>edge;
+ll cost[N];
+int p[N];
+int find(int y){return (p[y]==y?y:(p[y]=find(p[y])));}
+bool uni(int x,int y){
+    x=find(x);
+    y=find(y);
+    if(x==y)return false;
+    p[x]=y;
+    return true;
+}
+int main(){
+    FAST;
+    int n,m;
+    scanf("%d%d",&n,&m);
+    for(int i=0;i<n;i++)
+        scanf("%lld",&cost[i]);
+    
+    vector<edge>v(m);    
+    for(int i=0;i<m;i++){
+        scanf("%d%d%lld",&v[i].s.f,&v[i].s.s,&v[i].f);
+        v[i].s.s--;v[i].s.f--;
+    }    
+    ll val=1e14;
+    int aux;
+    for(int i=0;i<n;i++)
+        if(cost[i]<val){
+            aux=i;
+            val=cost[i];
+        }
+    for(int i=0;i<n;i++){
+        if(i==aux)continue;
+        v.push_back({cost[i]+cost[aux],{aux,i}});
+    }
+    sort(v.begin(),v.end());
+    for(int i=0;i<n;i++)
+        p[i]=i;
+    ll ans=0;
+    for(auto p:v){
+        if(uni(p.s.f,p.s.s))
+            ans+=p.f;
+    }
+    printf("%lld\n",ans);
+    return 0;
+}
